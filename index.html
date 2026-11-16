@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="ipod">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio єѕρєηcαт</title>
+    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Lobo-auriculares.jpg">
+    <style>
+        /* =========================================================
+           DEFINICIÓN DE TEMAS (iPod Classic por defecto, M3 y VLC)
+           ========================================================= */
+        :root,
+        [data-theme="ipod"] {
+            --bg-app: #d1d5db;
+            --bg-surface: linear-gradient(180deg, #f9fafb 0%, #e5e7eb 100%);
+            --bg-deck: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0f9ff;
+            --bg-card-active: #dbeafe;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --accent: #2563eb;
+            --accent-text: #ffffff;
+            --border-color: #9ca3af;
+            --deck-border: #60a5fa;
+            --radius-main: 24px;
+            --radius-card: 12px;
+            --btn-radius: 50%;
+            --shadow-main: 0 12px 30px rgba(0, 0, 0, 0.25), inset 0 2px 3px rgba(255, 255, 255, 0.9);
+            --eq-color: #1d4ed8;
+            --font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        [data-theme="m3-lavender"] {
+            --bg-app: #f4eff4;
+            --bg-surface: #fffbfe;
+            --bg-deck: #f3edf7;
+            --bg-card: #f7f2fa;
+            --bg-card-hover: #ece6f0;
+            --bg-card-active: #e8def8;
+            --text-main: #1d1b20;
+            --text-muted: #49454f;
+            --accent: #6750a4;
+            --accent-text: #ffffff;
+            --border-color: #cac4d0;
+            --deck-border: #d0bcff;
+            --radius-main: 28px;
+            --radius-card: 18px;
+            --btn-radius: 16px;
+            --shadow-main: 0 8px 24px rgba(103, 80, 164, 0.12);
+            --eq-color: #6750a4;
+            --font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        [data-theme="m3-dark"] {
+            --bg-app: #141218;
+            --bg-surface: #1d1b20;
+            --bg-deck: #2b2930;
+            --bg-card: #211f26;
+            --bg-card-hover: #2b2930;
+            --bg-card-active: #4f378b;
+            --text-main: #e6e0e9;
+            --text-muted: #cac4d0;
+            --accent: #d0bcff;
+            --accent-text: #381e72;
+            --border-color: #49454f;
+            --deck-border: #6750a4;
+            --radius-main: 28px;
+            --radius-card: 18px;
+            --btn-radius: 16px;
+            --shadow-main: 0 10px 28px rgba(0, 0, 0, 0.5);
+            --eq-color: #d0bcff;
+            --font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        [data-theme="vlc"] {
+            --bg-app: #1e1e1e;
+            --bg-surface: #2d2d2d;
+            --bg-deck: #1a1a1a;
+            --bg-card: #383838;
+            --bg-card-hover: #454545;
+            --bg-card-active: #4d3319;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #ff8800;
+            --accent-text: #111111;
+            --border-color: #4b5563;
+            --deck-border: #ff8800;
+            --radius-main: 12px;
+            --radius-card: 8px;
+            --btn-radius: 8px;
+            --shadow-main: 0 10px 25px rgba(0, 0, 0, 0.6);
+            --eq-color: #ff8800;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        .app-shell {
+            background: var(--bg-surface);
+            width: 100%;
+            max-width: 920px;
+            height: 100%;
+            max-height: 860px;
+            border-radius: var(--radius-main);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* =========================================================
+           CABECERA FIJA
+           ========================================================= */
+        .top-bar {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+        }
+
+        .brand h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: var(--text-main);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease, background-color 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-card-hover);
+            transform: scale(1.05);
+        }
+
+        /* =========================================================
+           REPRODUCTOR COMPACTO FIJO SUPERIOR
+           ========================================================= */
+        .player-deck {
+            flex-shrink: 0;
+            background: var(--bg-deck);
+            margin: 10px 16px 6px 16px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--deck-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Fila superior: Logo centrado + Ecualizador a la derecha */
+        .deck-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .current-logo {
+            width: 58px;
+            height: 58px;
+            border-radius: 12px;
+            object-fit: cover;
+            background-color: #ffffff;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .equalizer {
+            display: flex;
+            align-items: flex-end;
+            height: 26px;
+            gap: 4px;
+        }
+
+        .eq-bar {
+            width: 4px;
+            height: 5px;
+            background-color: var(--eq-color);
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+
+        .playing .eq-bar {
+            animation: eqBounce 0.7s infinite ease-in-out alternate;
+        }
+
+        .playing .eq-bar:nth-child(2) { animation-delay: 0.15s; }
+        .playing .eq-bar:nth-child(3) { animation-delay: 0.35s; }
+        .playing .eq-bar:nth-child(4) { animation-delay: 0.1s; }
+        .playing .eq-bar:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes eqBounce {
+            0% { height: 5px; }
+            100% { height: 26px; }
+        }
+
+        /* Nombre de la emisora (oculto cuando no hay selección) */
+        .current-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: center;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .current-title:empty {
+            display: none;
+        }
+
+        /* Fila de controles: Play/Pausa + Volumen al 60% del ancho */
+        .deck-controls {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .btn-play {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--btn-radius);
+            border: none;
+            background-color: var(--accent);
+            color: var(--accent-text);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.15s ease, border-radius 0.2s ease;
+        }
+
+        .btn-play:hover {
+            transform: scale(1.06);
+        }
+
+        .playing .btn-play {
+            border-radius: 50%;
+        }
+
+        .volume-box {
+            width: 60%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-icon {
+            font-size: 0.95rem;
+            user-select: none;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+            cursor: pointer;
+            height: 6px;
+        }
+
+        /* =========================================================
+           CONTENEDOR CON SCROLL SOLO PARA LAS EMISORAS
+           ========================================================= */
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 10px 16px 18px 16px;
+        }
+
+        .scroll-area::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Cuadrícula fluida sin scroll horizontal */
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+            gap: 12px;
+            width: 100%;
+        }
+
+        .station-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-card);
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .station-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .station-card.active {
+            background: var(--bg-card-active);
+            border: 2px solid var(--accent);
+        }
+
+        .station-logo {
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 8px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+        }
+
+        .station-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        /* =========================================================
+           VISTA SECUNDARIA: AÑADIR EMISORA
+           ========================================================= */
+        .view-hidden {
+            display: none !important;
+        }
+
+        .add-view {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .add-view h2 {
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .field-group label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .field-group input {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            flex: 1;
+            padding: 11px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- Cabecera fija -->
+    <header class="top-bar">
+        <div class="brand">
+            <img class="brand-logo" src="https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Lobo-auriculares.jpg" alt="Logo Radio">
+            <h1>Radio єѕρєηcαт</h1>
+        </div>
+        <div class="top-actions">
+            <button class="icon-btn" id="themeBtn" title="Cambiar tema">🎨</button>
+            <button class="icon-btn" id="toggleViewBtn" title="Añadir emisora">➕</button>
+        </div>
+    </header>
+
+    <!-- Vista principal: Reproductor fijo arriba + Cuadrícula con scroll -->
+    <div id="mainView" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+        <section class="player-deck" id="playerDeck">
+            <div class="deck-visual">
+                <img id="currentLogo" class="current-logo" src="https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Lobo-auriculares.jpg" alt="Logo emisora">
+                <div class="equalizer" aria-hidden="true">
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                </div>
+            </div>
+
+            <div class="current-title" id="currentTitle"></div>
+
+            <div class="deck-controls">
+                <button class="btn-play" id="playPauseBtn" title="Reproducir / Pausar">▶</button>
+                <div class="volume-box">
+                    <span class="volume-icon" id="volIcon">🔊</span>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.02" value="0.8" aria-label="Volumen">
+                </div>
+            </div>
+        </section>
+
+        <main class="scroll-area">
+            <div class="station-grid" id="stationGrid"></div>
+        </main>
+    </div>
+
+    <!-- Vista secundaria: Formulario para añadir emisoras -->
+    <section id="addView" class="add-view view-hidden">
+        <h2>➕ Añadir nueva emisora</h2>
+        <div class="field-group">
+            <label for="newName">Nombre de la emisora *</label>
+            <input type="text" id="newName" placeholder="Ej. Mi Radio Favorita">
+        </div>
+        <div class="field-group">
+            <label for="newLogo">URL del logo (opcional)</label>
+            <input type="url" id="newLogo" placeholder="https://ejemplo.com/logo.png">
+        </div>
+        <div class="field-group">
+            <label for="newUrl1">URL principal del stream *</label>
+            <input type="url" id="newUrl1" placeholder="https://ejemplo.com/stream.mp3">
+        </div>
+        <div class="field-group">
+            <label for="newUrl2">URL alternativa de respaldo (opcional)</label>
+            <input type="url" id="newUrl2" placeholder="https://respaldo.com/stream.mp3">
+        </div>
+        <div class="form-buttons">
+            <button class="btn-secondary" id="cancelAddBtn">Cancelar</button>
+            <button class="btn-primary" id="saveStationBtn">Guardar emisora</button>
+        </div>
+    </section>
+</div>
+
+<audio id="audioPlayer" crossorigin="anonymous"></audio>
+
+<script>
+    const DEFAULT_LOGO = "https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Lobo-auriculares.jpg";
+
+    /* Emisoras precargadas (puedes editar nombres, logos y listas de URLs en Notepad++) */
+    const defaultStations = [
+{name:"Cadena Dial", logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/fc/7a/ae/fc7aae7d-f385-27fd-30b4-df606dc444c6/AppIcon-1x_U007emarketing-0-8-0-85-220-0.png/1024x1024bb.png", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3"]},
+{name:"Cadena 100", logo: "https://play-lh.googleusercontent.com/f6E6w-ZV4kxGrDwcODUv1WQwhg9ZmTUQE0vY-t0VYdvSlUX0KQBFyXL--KnPhWQxKg=s512", urls:["https://cadena100-streamers-mp3-low.flumotion.com/cope/cadena100-low.mp3"]},
+{name:"Los 40", logo: "https://co.radio.net/300/los40.png?version=0c5a36f92917fa35cb6bdc0ad80ff64bf71366ff", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40.mp3"]},
+{name:"Europa FM", logo: "https://cdn-profiles.tunein.com/s6779/images/logog.png?t=2", urls:["https://radio-atres-live.ondacero.es/api/livestream-redirect/EFMAAC.aac"]},
+{name:"Rock FM", logo: "https://cdn.aptoide.com/imgs/5/6/d/56dc7cf7fa8339acfd060af31953cb82_icon.png", urls:["https://rockfm-cope-rrcast.flumotion.com/cope/rockfm-low.mp3"]},
+{name:"Radio Marca", logo: "https://play-lh.googleusercontent.com/4_7_4vTd1xleWVVPtGrlzh2WEGy-PWKNxAcJKY7To31fV6Pr63jBo8xU6niSwc1xGDu_", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/RADIOMARCA_NACIONAL.mp3"]},
+{name:"COPE", logo: "https://play-lh.googleusercontent.com/y0kEAIz4B_O-qCRSZEavDGrao8xovFpsl_gzLBBFY2POQAY3HQPHFX9vSgI-KaZA48U=s512", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3"]},
+{name:"Cadena SER", logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2a/55/e6/2a55e69f-5fd9-89a7-102c-4886676e8064/Placeholder.mill/1024x1024bb.jpg", urls:["https://emisoras.cadenaser.com/CADENASER"]},
+{name:"Onda Cero", logo: "https://i.scdn.co/image/ab6775700000ee851a865a3769a3e6868928a43f", urls:["https://atres-live.ondacero.es/live/ondacero/bitrate_1.m3u8"]},
+{name:"Los 40 Classic", logo: "https://is1-ssl.mzstatic.com/image/thumb/tL025XkiFsMLmi6P2XbTjA/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_CLASSIC.mp3"]},
+{name:"LOS40 Dance", logo: "https://is1-ssl.mzstatic.com/image/thumb/KegBqioK6Nqjekgb4XZJJQ/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_DANCE.mp3"]},
+{name:"Los 40 Urban", logo: "https://is1-ssl.mzstatic.com/image/thumb/hcMF9sONJWzi4hp0xFdLpA/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_URBAN.mp3"]},
+{name:"Máxima FM", logo: "https://i1.sndcdn.com/artworks-c2r8a989wyOCRUu5-NEzkGw-t500x500.jpg", urls:["https://25633.live.streamtheworld.com/LOS40_DANCE.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_DANCE.mp3"]},
+{name:"Melodía FM", logo: "https://graph.facebook.com/tumelodiafm/picture?width=400&height=400", urls:["https://radio-atres-live.ondacero.es/api/livestream-redirect/MELODIA_FMAAC.aac"]},
+{name:"Kiss FM", logo: "https://upload.wikimedia.org/wikipedia/commons/6/66/Logo_KISS_FM_2023.jpg", urls:["https://bbkissfm.kissfmradio.cires21.com/bbkissfm.mp3"]},
+{name:"Hit FM", logo: "https://play-lh.googleusercontent.com/vhLQSO0T_bIKChNhAgMmFbU1RiSOJ0daPxwnxhgh1fJz2acsrmD0u5mAlwcQpFK8tvM", urls:["https://bbhitfm.kissfmradio.cires21.com/bbhitfm.mp3"]},
+{name:"esRadio", logo: "https://graph.facebook.com/esradio/picture?width=400&height=400", urls:["https://libertaddigital-radio-live1.flumotion.com/libertaddigital/ld-live1-high.aac"]},
+{name:"MegaStar FM", short:["MEGA"], bg:"bg-cyan", domain:"megastarfm.es", logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f3/60/80/f3608064-b265-87fd-ebc2-789fff7b2b10/Production-0-1x_U007epad-0-1-0-85-220-0.png/1024x1024bb.png", urls:["https://megastar-cope.flumotion.com/playlist.m3u8"]},
+{name:"Loca FM", short:["LOCA"], bg:"bg-pink", domain:"locafm.com", logo: "https://static-2.ivoox.com/radios/3/7/7/8/4931576668773_XL.jpg", urls:["https://s3.we4stream.com:2020/stream/locafm"]},
+{name:"Energy FM", short:["NRG"], bg:"bg-yellow", domain:"energyfm.es", logo: "https://www.radiogrom.com/paint_new/logo_kazakhstan/energy_fm_kazakhstan_logo.jpg", urls:["https://radio.almunecar360.com/listen/energyfm/radio.mp3", "https://radio.almunecar360.com/listen/energyfm/radio.aac"]},
+{name:"SER Deportes", short:["SER","DEP"], bg:"bg-gold", domain:"cadenaser.com", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTN97x2XhK7FSkAXds9pHNB6uurSJaL0U-a_-bzBOilAUrYHQuwumGaBX30&s=10", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT1.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT2.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER.mp3"]},
+{name:"COPE Deportes", short:["COPE","DEP"], bg:"bg-blue", domain:"cope.es", logo: "https://graph.facebook.com/COPE/picture?width=1024&height=1024", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3", "https://flucast06-o-cloud.flumotion.com/cope/net4.mp3", "https://flucast09-h-cloud.flumotion.com/cope/net1.aac"]},
+{name:"RNE 1", short:["RNE","1"], bg:"bg-navy", domain:"rtve.es", logo: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/72/4e/5f/724e5f38-5893-25f0-8857-0890cd6d0de6/WorldDetails11424134154232091385.png/1024x1024bb.jpg", urls:["https://rtvelivestream.rtve.es/rtvesec/rne/rne1_main.m3u8"]},
+{id:"sdf80s", name:"80s Super Dancefloor", short:["80s","SDF"], bg:"bg-purple", domain:"sdf80s.es", logo: "https://static2.mytuner.mobi/media/tvos_radios/cpfthdkc2aag.png", urls:["https://stream.zeno.fm/e59826bc-00f5-41fd-95e5-532f0b3a7be2", "https://s41.myradiostream.com:33604/;stream.mp3"]},
+     ];
+
+    /* Temas disponibles (iPod Classic por defecto) */
+    const themes = ["ipod", "m3-lavender", "m3-dark", "vlc"];
+    let currentThemeIndex = themes.indexOf(localStorage.getItem("radioTheme"));
+    if (currentThemeIndex === -1) currentThemeIndex = 0;
+
+    function applyTheme(index) {
+        document.documentElement.setAttribute("data-theme", themes[index]);
+        localStorage.setItem("radioTheme", themes[index]);
+    }
+    applyTheme(currentThemeIndex);
+
+    /* Estado de emisoras y reproducción */
+    let stations = JSON.parse(localStorage.getItem("espencatStations")) || defaultStations;
+    let currentStationIndex = -1;
+    let currentUrlIndex = 0;
+    let isPlaying = false;
+
+    const audio = document.getElementById("audioPlayer");
+    const playerDeck = document.getElementById("playerDeck");
+    const currentLogoEl = document.getElementById("currentLogo");
+    const currentTitleEl = document.getElementById("currentTitle");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const volIcon = document.getElementById("volIcon");
+    const stationGrid = document.getElementById("stationGrid");
+    const mainView = document.getElementById("mainView");
+    const addView = document.getElementById("addView");
+    const toggleViewBtn = document.getElementById("toggleViewBtn");
+
+    function renderGrid() {
+        stationGrid.innerHTML = "";
+        stations.forEach((station, idx) => {
+            const card = document.createElement("div");
+            card.className = "station-card" + (idx === currentStationIndex ? " active" : "");
+
+            const img = document.createElement("img");
+            img.className = "station-logo";
+            img.src = station.logo || DEFAULT_LOGO;
+            img.alt = station.name;
+            img.onerror = () => { img.src = DEFAULT_LOGO; };
+
+            const title = document.createElement("div");
+            title.className = "station-name";
+            title.textContent = station.name;
+
+            card.appendChild(img);
+            card.appendChild(title);
+            card.addEventListener("click", () => startStation(idx, 0));
+            stationGrid.appendChild(card);
+        });
+    }
+
+    function startStation(stationIdx, urlIdx) {
+        const station = stations[stationIdx];
+        if (!station || !station.urls || station.urls.length === 0) return;
+
+        currentStationIndex = stationIdx;
+        currentUrlIndex = urlIdx;
+
+        currentLogoEl.src = station.logo || DEFAULT_LOGO;
+        currentLogoEl.onerror = () => { currentLogoEl.src = DEFAULT_LOGO; };
+        currentTitleEl.textContent = station.name;
+
+        audio.src = station.urls[urlIdx];
+        audio.play().catch(() => handleStreamError());
+        renderGrid();
+    }
+
+    function handleStreamError() {
+        if (currentStationIndex === -1) return;
+        const station = stations[currentStationIndex];
+        if (station && currentUrlIndex + 1 < station.urls.length) {
+            startStation(currentStationIndex, currentUrlIndex + 1);
+        } else {
+            isPlaying = false;
+            playPauseBtn.textContent = "▶";
+            playerDeck.classList.remove("playing");
+        }
+    }
+
+    audio.addEventListener("playing", () => {
+        isPlaying = true;
+        playPauseBtn.textContent = "⏸";
+        playerDeck.classList.add("playing");
+    });
+
+    audio.addEventListener("pause", () => {
+        isPlaying = false;
+        playPauseBtn.textContent = "▶";
+        playerDeck.classList.remove("playing");
+    });
+
+    audio.addEventListener("error", handleStreamError);
+
+    playPauseBtn.addEventListener("click", () => {
+        if (currentStationIndex === -1) {
+            if (stations.length > 0) startStation(0, 0);
+            return;
+        }
+        if (isPlaying) {
+            audio.pause();
+        } else {
+            audio.play().catch(() => handleStreamError());
+        }
+    });
+
+    /* Control de volumen */
+    audio.volume = parseFloat(volumeSlider.value);
+    volumeSlider.addEventListener("input", (e) => {
+        const val = parseFloat(e.target.value);
+        audio.volume = val;
+        volIcon.textContent = val === 0 ? "🔇" : val < 0.5 ? "🔉" : "🔊";
+    });
+
+    /* Cambio de tema */
+    document.getElementById("themeBtn").addEventListener("click", () => {
+        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+        applyTheme(currentThemeIndex);
+    });
+
+    /* Alternar vista añadir emisora */
+    function showMainView() {
+        addView.classList.add("view-hidden");
+        mainView.classList.remove("view-hidden");
+        toggleViewBtn.textContent = "➕";
+        toggleViewBtn.title = "Añadir emisora";
+    }
+
+    function showAddView() {
+        mainView.classList.add("view-hidden");
+        addView.classList.remove("view-hidden");
+        toggleViewBtn.textContent = "📻";
+        toggleViewBtn.title = "Volver al reproductor";
+    }
+
+    toggleViewBtn.addEventListener("click", () => {
+        if (addView.classList.contains("view-hidden")) {
+            showAddView();
+        } else {
+            showMainView();
+        }
+    });
+
+    document.getElementById("cancelAddBtn").addEventListener("click", showMainView);
+
+    document.getElementById("saveStationBtn").addEventListener("click", () => {
+        const name = document.getElementById("newName").value.trim();
+        const logo = document.getElementById("newLogo").value.trim() || DEFAULT_LOGO;
+        const url1 = document.getElementById("newUrl1").value.trim();
+        const url2 = document.getElementById("newUrl2").value.trim();
+
+        if (!name || !url1) {
+            alert("Por favor, introduce al menos el nombre y la URL principal.");
+            return;
+        }
+
+        const urls = [url1];
+        if (url2) urls.push(url2);
+
+        stations.push({ name, logo, urls });
+        localStorage.setItem("espencatStations", JSON.stringify(stations));
+
+        document.getElementById("newName").value = "";
+        document.getElementById("newLogo").value = "";
+        document.getElementById("newUrl1").value = "";
+        document.getElementById("newUrl2").value = "";
+
+        renderGrid();
+        showMainView();
+    });
+
+    renderGrid();
+</script>
+</body>
+</html>
