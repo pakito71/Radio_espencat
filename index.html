@@ -342,10 +342,10 @@
             border-radius: 4px;
         }
 
-        /* Cuadrícula fluida sin scroll horizontal */
+        /* Cuadrícula fluida: garantiza un mínimo de 2 columnas en cualquier ancho */
         .station-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(125px, calc(50% - 6px)), 1fr));
             gap: 12px;
             width: 100%;
         }
@@ -360,6 +360,8 @@
             align-items: center;
             text-align: center;
             cursor: pointer;
+            min-width: 0;
+            overflow: hidden;
             transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
         }
 
@@ -374,8 +376,9 @@
         }
 
         .station-logo {
-            width: 72px;
-            height: 72px;
+            width: min(72px, 65%);
+            height: auto;
+            aspect-ratio: 1 / 1;
             border-radius: 12px;
             object-fit: cover;
             margin-bottom: 8px;
@@ -550,7 +553,6 @@
 {name:"Europa FM", logo: "https://cdn-profiles.tunein.com/s6779/images/logog.png?t=2", urls:["https://radio-atres-live.ondacero.es/api/livestream-redirect/EFMAAC.aac"]},
 {name:"Rock FM", logo: "https://cdn.aptoide.com/imgs/5/6/d/56dc7cf7fa8339acfd060af31953cb82_icon.png", urls:["https://rockfm-cope-rrcast.flumotion.com/cope/rockfm-low.mp3"]},
 {name:"Radio Marca", logo: "https://play-lh.googleusercontent.com/4_7_4vTd1xleWVVPtGrlzh2WEGy-PWKNxAcJKY7To31fV6Pr63jBo8xU6niSwc1xGDu_", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/RADIOMARCA_NACIONAL.mp3"]},
-{name:"Valencia CF Radio", logo: "https://graph.facebook.com/ValenciaCF/picture?width=200&height=200", urls:["https://radio-valencia-direct.flumotion.com/rvfc/shoutcast.mp3"]},
 {name:"COPE", logo: "https://play-lh.googleusercontent.com/y0kEAIz4B_O-qCRSZEavDGrao8xovFpsl_gzLBBFY2POQAY3HQPHFX9vSgI-KaZA48U=s512", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3"]},
 {name:"Cadena SER", logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2a/55/e6/2a55e69f-5fd9-89a7-102c-4886676e8064/Placeholder.mill/1024x1024bb.jpg", urls:["https://emisoras.cadenaser.com/CADENASER"]},
 {name:"Onda Cero", logo: "https://i.scdn.co/image/ab6775700000ee851a865a3769a3e6868928a43f", urls:["https://atres-live.ondacero.es/live/ondacero/bitrate_1.m3u8"]},
@@ -567,6 +569,7 @@
 {name:"SER Deportes", short:["SER","DEP"], bg:"bg-gold", domain:"cadenaser.com", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTN97x2XhK7FSkAXds9pHNB6uurSJaL0U-a_-bzBOilAUrYHQuwumGaBX30&s=10", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT1.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT2.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER.mp3"]},
 {name:"COPE Deportes", short:["COPE","DEP"], bg:"bg-blue", domain:"cope.es", logo: "https://graph.facebook.com/COPE/picture?width=1024&height=1024", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3", "https://flucast06-o-cloud.flumotion.com/cope/net4.mp3", "https://flucast09-h-cloud.flumotion.com/cope/net1.aac"]},
 {name:"RNE 1", short:["RNE","1"], bg:"bg-navy", domain:"rtve.es", logo: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/72/4e/5f/724e5f38-5893-25f0-8857-0890cd6d0de6/WorldDetails11424134154232091385.png/1024x1024bb.jpg", urls:["https://rtvelivestream.rtve.es/rtvesec/rne/rne1_main.m3u8"]},
+
 {name:"MDTRadio", logo: "https://graph.facebook.com/mdtradio/picture?width=200&height=200", urls:["https://mdtradio.emitironline.com/mdtwebMaster"]},
 {name:"MDT Radio Pop Stars", logo: "https://mdtradio.com/wp-content/uploads/2024/11/Logo-MDT-Radio-Pop-Stars-Fm2.jpg", urls:["https://mdtradio.emitironline.com/PopStarsFm"]},
 {name:"MDT Radio 80s", logo: "https://mdtradio.com/wp-content/uploads/2024/08/Logo-MDT-Radio-80s-300x300.jpg", urls:["https://mdtradio.emitironline.com/MDTradio80"]},
@@ -592,6 +595,9 @@
 {name:"Loca FM Industrial", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_industrial/live"]},
 {name:"Loca FM Drum&Bass", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_drum__bass/live"]},
 {name:"DigitalHits FM", logo: "https://graph.facebook.com/digitalhits/picture?width=200&height=200", urls:["https://dhits.frilab.com:8443/dhits"]},
+
+
+
 {id:"sdf80s", name:"80s Super Dancefloor", short:["80s","SDF"], bg:"bg-purple", domain:"sdf80s.es", logo: "https://static2.mytuner.mobi/media/tvos_radios/cpfthdkc2aag.png", urls:["https://stream.zeno.fm/e59826bc-00f5-41fd-95e5-532f0b3a7be2", "https://s41.myradiostream.com:33604/;stream.mp3"]},
      ];
 
