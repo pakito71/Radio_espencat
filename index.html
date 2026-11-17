@@ -206,7 +206,6 @@
             box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.08);
         }
 
-        /* Fila superior: Logo centrado + Ecualizador a la derecha */
         .deck-visual {
             display: flex;
             align-items: center;
@@ -253,7 +252,6 @@
             100% { height: 26px; }
         }
 
-        /* Nombre de la emisora (oculto cuando no hay selección) */
         .current-title {
             font-size: 0.95rem;
             font-weight: 700;
@@ -269,43 +267,64 @@
             display: none;
         }
 
-        /* Fila de controles: Play/Pausa + Volumen al 60% del ancho */
+        /* Fila de controles: Anterior + Play/Pausa + Siguiente + Volumen */
         .deck-controls {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .btn-play {
-            width: 42px;
-            height: 42px;
-            border-radius: var(--btn-radius);
+        .playback-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-img-control {
+            width: 44px;
+            height: 44px;
+            padding: 0;
             border: none;
-            background-color: var(--accent);
-            color: var(--accent-text);
-            font-size: 1.1rem;
-            font-weight: bold;
+            background: transparent;
+            border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.15s ease, border-radius 0.2s ease;
+            transition: transform 0.15s ease;
         }
 
-        .btn-play:hover {
-            transform: scale(1.06);
-        }
-
-        .playing .btn-play {
+        .btn-img-control img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             border-radius: 50%;
+            display: block;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
+        }
+
+        .btn-img-control:hover {
+            transform: scale(1.08);
+        }
+
+        .btn-img-control:active {
+            transform: scale(0.95);
+        }
+
+        .btn-play-img {
+            width: 48px;
+            height: 48px;
         }
 
         .volume-box {
-            width: 60%;
+            flex: 1;
+            min-width: 130px;
+            max-width: 320px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -321,6 +340,51 @@
             accent-color: var(--accent);
             cursor: pointer;
             height: 6px;
+        }
+
+        /* =========================================================
+           BARRA DE FILTROS POR TIPO DE EMISORA
+           ========================================================= */
+        .filter-bar {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px 8px 16px;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-bar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .filter-chip {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            padding: 6px 13px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+        }
+
+        .filter-chip:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .filter-chip.active {
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
         }
 
         /* =========================================================
@@ -342,7 +406,7 @@
             border-radius: 4px;
         }
 
-        /* Cuadrícula fluida: garantiza un mínimo de 2 columnas en cualquier ancho */
+        /* Cuadrícula fluida: siempre mínimo 2 emisoras por fila */
         .station-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(min(125px, calc(50% - 6px)), 1fr));
@@ -351,6 +415,7 @@
         }
 
         .station-card {
+            min-width: 0;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-card);
@@ -360,8 +425,6 @@
             align-items: center;
             text-align: center;
             cursor: pointer;
-            min-width: 0;
-            overflow: hidden;
             transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
         }
 
@@ -377,8 +440,8 @@
 
         .station-logo {
             width: min(72px, 65%);
-            height: auto;
             aspect-ratio: 1 / 1;
+            height: auto;
             border-radius: 12px;
             object-fit: cover;
             margin-bottom: 8px;
@@ -396,6 +459,30 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             width: 100%;
+            word-break: break-word;
+        }
+
+        .station-badge {
+            margin-top: 5px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            padding: 2px 8px;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-muted);
+            padding: 28px 12px;
+            font-size: 0.9rem;
         }
 
         /* =========================================================
@@ -431,7 +518,8 @@
             color: var(--text-muted);
         }
 
-        .field-group input {
+        .field-group input,
+        .field-group select {
             padding: 10px 12px;
             border-radius: 10px;
             border: 1px solid var(--border-color);
@@ -484,7 +572,7 @@
         </div>
     </header>
 
-    <!-- Vista principal: Reproductor fijo arriba + Cuadrícula con scroll -->
+    <!-- Vista principal: Reproductor fijo arriba + Filtros + Cuadrícula con scroll -->
     <div id="mainView" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
         <section class="player-deck" id="playerDeck">
             <div class="deck-visual">
@@ -501,13 +589,26 @@
             <div class="current-title" id="currentTitle"></div>
 
             <div class="deck-controls">
-                <button class="btn-play" id="playPauseBtn" title="Reproducir / Pausar">▶</button>
+                <div class="playback-buttons">
+                    <button class="btn-img-control" id="prevStationBtn" title="Emisora anterior" aria-label="Emisora anterior">
+                        <img src="https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Boton_Anterior.png" alt="Anterior">
+                    </button>
+                    <button class="btn-img-control btn-play-img" id="playPauseBtn" title="Reproducir / Pausar" aria-label="Reproducir o Pausar">
+                        <img id="playPauseImg" src="https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Boton_Play.png" alt="Reproducir">
+                    </button>
+                    <button class="btn-img-control" id="nextStationBtn" title="Siguiente emisora" aria-label="Siguiente emisora">
+                        <img src="https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Boton_Siguiente.png" alt="Siguiente">
+                    </button>
+                </div>
                 <div class="volume-box">
                     <span class="volume-icon" id="volIcon">🔊</span>
                     <input type="range" id="volumeSlider" min="0" max="1" step="0.02" value="0.8" aria-label="Volumen">
                 </div>
             </div>
         </section>
+
+        <!-- Barra de filtros por tipo -->
+        <nav class="filter-bar" id="filterBar" aria-label="Filtrar por tipo de emisora"></nav>
 
         <main class="scroll-area">
             <div class="station-grid" id="stationGrid"></div>
@@ -520,6 +621,15 @@
         <div class="field-group">
             <label for="newName">Nombre de la emisora *</label>
             <input type="text" id="newName" placeholder="Ej. Mi Radio Favorita">
+        </div>
+        <div class="field-group">
+            <label for="newType">Tipo de emisora *</label>
+            <select id="newType">
+                <option value="Música">Música</option>
+                <option value="Deportes">Deportes</option>
+                <option value="Nacional">Nacional</option>
+                <option value="Local">Local</option>
+            </select>
         </div>
         <div class="field-group">
             <label for="newLogo">URL del logo (opcional)</label>
@@ -544,69 +654,76 @@
 
 <script>
     const DEFAULT_LOGO = "https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Lobo-auriculares.jpg";
+    const PLAY_ICON_URL = "https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Boton_Play.png";
+    const PAUSE_ICON_URL = "https://raw.githubusercontent.com/pakito71/Logos/refs/heads/master/Boton_Pause.png";
+    const STATION_TYPES = ["Todas", "Música", "Deportes", "Nacional", "Local"];
+    const VALID_TYPES = ["Música", "Deportes", "Nacional", "Local"];
 
-    /* Emisoras precargadas (puedes editar nombres, logos y listas de URLs en Notepad++) */
+    /* Emisoras precargadas (puedes editar nombres, tipos, logos y URLs en Notepad++) */
     const defaultStations = [
-{name:"Cadena Dial", logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/fc/7a/ae/fc7aae7d-f385-27fd-30b4-df606dc444c6/AppIcon-1x_U007emarketing-0-8-0-85-220-0.png/1024x1024bb.png", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3"]},
-{name:"Cadena 100", logo: "https://play-lh.googleusercontent.com/f6E6w-ZV4kxGrDwcODUv1WQwhg9ZmTUQE0vY-t0VYdvSlUX0KQBFyXL--KnPhWQxKg=s512", urls:["https://cadena100-streamers-mp3-low.flumotion.com/cope/cadena100-low.mp3"]},
-{name:"Los 40", logo: "https://co.radio.net/300/los40.png?version=0c5a36f92917fa35cb6bdc0ad80ff64bf71366ff", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40.mp3"]},
-{name:"Europa FM", logo: "https://cdn-profiles.tunein.com/s6779/images/logog.png?t=2", urls:["https://radio-atres-live.ondacero.es/api/livestream-redirect/EFMAAC.aac"]},
-{name:"Rock FM", logo: "https://cdn.aptoide.com/imgs/5/6/d/56dc7cf7fa8339acfd060af31953cb82_icon.png", urls:["https://rockfm-cope-rrcast.flumotion.com/cope/rockfm-low.mp3"]},
-{name:"Radio Marca", logo: "https://play-lh.googleusercontent.com/4_7_4vTd1xleWVVPtGrlzh2WEGy-PWKNxAcJKY7To31fV6Pr63jBo8xU6niSwc1xGDu_", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/RADIOMARCA_NACIONAL.mp3"]},
-{name:"COPE", logo: "https://play-lh.googleusercontent.com/y0kEAIz4B_O-qCRSZEavDGrao8xovFpsl_gzLBBFY2POQAY3HQPHFX9vSgI-KaZA48U=s512", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3"]},
-{name:"Cadena SER", logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2a/55/e6/2a55e69f-5fd9-89a7-102c-4886676e8064/Placeholder.mill/1024x1024bb.jpg", urls:["https://emisoras.cadenaser.com/CADENASER"]},
-{name:"Onda Cero", logo: "https://i.scdn.co/image/ab6775700000ee851a865a3769a3e6868928a43f", urls:["https://atres-live.ondacero.es/live/ondacero/bitrate_1.m3u8"]},
-{name:"Activa FM", logo: "https://graph.facebook.com/activafm.radiomusical/picture?width=200&height=200", urls:["https://stream.emisorasmusicales.net/radio/8000/activafm.mp3"]},
-{name:"+ Activa", logo: "https://media.emisorasmusicales.net/wp-content/uploads/2020/05/11022613/activa--200x200.png", urls:["https://stream.emisorasmusicales.net/radio/8110/mas-activa.mp3"]},
-{name:"La Mega FM", logo: "https://media.emisorasmusicales.net/wp-content/uploads/2020/03/11023732/LaMega-200x200.png", urls:["https://stream.emisorasmusicales.net/radio/8020/lamega.mp3"]},
-{name:"Bikini FM", logo: "https://media.emisorasmusicales.net/wp-content/uploads/2020/03/04134801/logo-BIKINI-FM-web-1.png", urls:["https://stream.emisorasmusicales.net/radio/8030/bikinifm.mp3"]},
-{name:"Esencia FM", logo: "https://media.emisorasmusicales.net/wp-content/uploads/2020/03/11023735/EsenciaFM-200x200.png", urls:["https://stream.emisorasmusicales.net/radio/8040/esenciafm.mp3"]},
-{name:"Gold FM", logo: "https://media.emisorasmusicales.net/wp-content/uploads/2020/03/17111707/gold-1000x1000_Mesa-de-trabajo-1-200x200.png", urls:["https://stream.emisorasmusicales.net/radio/8050/goldfm.mp3"]},
-{name:"RockStar", logo: "https://media.emisorasmusicales.net/wp-content/uploads/2020/03/11023734/Rockstar-200x200.png", urls:["https://stream.emisorasmusicales.net/radio/8060/rockstar.mp3"]},
-{name:"Los 40 Classic", logo: "https://is1-ssl.mzstatic.com/image/thumb/tL025XkiFsMLmi6P2XbTjA/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_CLASSIC.mp3"]},
-{name:"LOS40 Dance", logo: "https://is1-ssl.mzstatic.com/image/thumb/KegBqioK6Nqjekgb4XZJJQ/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_DANCE.mp3"]},
-{name:"Los 40 Urban", logo: "https://is1-ssl.mzstatic.com/image/thumb/hcMF9sONJWzi4hp0xFdLpA/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_URBAN.mp3"]},
-{name:"Máxima FM", logo: "https://i1.sndcdn.com/artworks-c2r8a989wyOCRUu5-NEzkGw-t500x500.jpg", urls:["https://25633.live.streamtheworld.com/LOS40_DANCE.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_DANCE.mp3"]},
-{name:"Melodía FM", logo: "https://graph.facebook.com/tumelodiafm/picture?width=400&height=400", urls:["https://radio-atres-live.ondacero.es/api/livestream-redirect/MELODIA_FMAAC.aac"]},
-{name:"Kiss FM", logo: "https://upload.wikimedia.org/wikipedia/commons/6/66/Logo_KISS_FM_2023.jpg", urls:["https://bbkissfm.kissfmradio.cires21.com/bbkissfm.mp3"]},
-{name:"Hit FM", logo: "https://play-lh.googleusercontent.com/vhLQSO0T_bIKChNhAgMmFbU1RiSOJ0daPxwnxhgh1fJz2acsrmD0u5mAlwcQpFK8tvM", urls:["https://bbhitfm.kissfmradio.cires21.com/bbhitfm.mp3"]},
-{name:"esRadio", logo: "https://graph.facebook.com/esradio/picture?width=400&height=400", urls:["https://libertaddigital-radio-live1.flumotion.com/libertaddigital/ld-live1-high.aac"]},
-{name:"MegaStar FM", short:["MEGA"], bg:"bg-cyan", domain:"megastarfm.es", logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f3/60/80/f3608064-b265-87fd-ebc2-789fff7b2b10/Production-0-1x_U007epad-0-1-0-85-220-0.png/1024x1024bb.png", urls:["https://megastar-cope.flumotion.com/playlist.m3u8"]},
-{name:"Loca FM", short:["LOCA"], bg:"bg-pink", domain:"locafm.com", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s3.we4stream.com:2020/stream/locafm"]},
-{name:"SER Deportes", short:["SER","DEP"], bg:"bg-gold", domain:"cadenaser.com", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTN97x2XhK7FSkAXds9pHNB6uurSJaL0U-a_-bzBOilAUrYHQuwumGaBX30&s=10", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT1.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT2.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER.mp3"]},
-{name:"COPE Deportes", short:["COPE","DEP"], bg:"bg-blue", domain:"cope.es", logo: "https://graph.facebook.com/COPE/picture?width=1024&height=1024", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3", "https://flucast06-o-cloud.flumotion.com/cope/net4.mp3", "https://flucast09-h-cloud.flumotion.com/cope/net1.aac"]},
-{name:"RNE 1", short:["RNE","1"], bg:"bg-navy", domain:"rtve.es", logo: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/72/4e/5f/724e5f38-5893-25f0-8857-0890cd6d0de6/WorldDetails11424134154232091385.png/1024x1024bb.jpg", urls:["https://rtvelivestream.rtve.es/rtvesec/rne/rne1_main.m3u8"]},
-
-{name:"MDTRadio", logo: "https://graph.facebook.com/mdtradio/picture?width=200&height=200", urls:["https://mdtradio.emitironline.com/mdtwebMaster"]},
-{name:"MDT Radio Pop Stars", logo: "https://mdtradio.com/wp-content/uploads/2024/11/Logo-MDT-Radio-Pop-Stars-Fm2.jpg", urls:["https://mdtradio.emitironline.com/PopStarsFm"]},
-{name:"MDT Radio 80s", logo: "https://mdtradio.com/wp-content/uploads/2024/08/Logo-MDT-Radio-80s-300x300.jpg", urls:["https://mdtradio.emitironline.com/MDTradio80"]},
-{name:"MDT Radio 90s", logo: "https://mdtradio.com/wp-content/uploads/2024/08/Logo-MDT-Radio-90s-300x300.jpg", urls:["https://mdtradio.emitironline.com/MDTradio90"]},
-{name:"MDT Radio 2000", logo: "https://mdtradio.com/wp-content/uploads/2024/08/Logo-MDT-Radio-2000-300x300.jpg", urls:["https://mdtradio.emitironline.com/MDTradio2000"]},
-{name:"Loca FM Urban", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s1.we4stream.com:2020/stream/locaurban", "https://s2.we4stream.com/listen/loca_dance/live"]},
-{name:"Loca FM Remember", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_remember/live"]},
-{name:"Loca FM Hard", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_hard/live"]},
-{name:"Loca FM House", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_house/live"]},
-{name:"Loca FM Chill Out", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_chill_out/live"]},
-{name:"Loca FM Tech House", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_tech_house/live"]},
-{name:"Loca FM Trance", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_trance/live"]},
-{name:"Loca FM Techno", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_techo/live"]},
-{name:"Loca FM Big Room", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_big_room/live"]},
-{name:"Loca FM Deep House", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_deep_house/live"]},
-{name:"Loca FM Sessions", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_sessions/live"]},
-{name:"Loca FM Ambient", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_ambient/live"]},
-{name:"Loca FM 80's", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_80s/live"]},
-{name:"Loca FM 90's", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_90s_/live"]},
-{name:"Loca FM Melodic House", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_melodic_house/live"]},
-{name:"Loca FM Melodic Techno", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_melodic_techno/live"]},
-{name:"Loca FM Hard Techno", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_hard_techno/live"]},
-{name:"Loca FM Industrial", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_industrial/live"]},
-{name:"Loca FM Drum&Bass", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_drum__bass/live"]},
-{name:"DigitalHits FM", logo: "https://graph.facebook.com/digitalhits/picture?width=200&height=200", urls:["https://dhits.frilab.com:8443/dhits"]},
-
-
-
-{id:"sdf80s", name:"80s Super Dancefloor", short:["80s","SDF"], bg:"bg-purple", domain:"sdf80s.es", logo: "https://static2.mytuner.mobi/media/tvos_radios/cpfthdkc2aag.png", urls:["https://stream.zeno.fm/e59826bc-00f5-41fd-95e5-532f0b3a7be2", "https://s41.myradiostream.com:33604/;stream.mp3"]},
-     ];
+{name:"Cadena Dial", type:"Música", logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/fc/7a/ae/fc7aae7d-f385-27fd-30b4-df606dc444c6/AppIcon-1x_U007emarketing-0-8-0-85-220-0.png/1024x1024bb.png", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3"]},
+{name:"Cadena 100", type:"Música", logo: "https://play-lh.googleusercontent.com/f6E6w-ZV4kxGrDwcODUv1WQwhg9ZmTUQE0vY-t0VYdvSlUX0KQBFyXL--KnPhWQxKg=s512", urls:["https://cadena100-streamers-mp3-low.flumotion.com/cope/cadena100-low.mp3"]},
+{name:"Los 40", type:"Música", logo: "https://co.radio.net/300/los40.png?version=0c5a36f92917fa35cb6bdc0ad80ff64bf71366ff", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40.mp3"]},
+{name:"Europa FM", type:"Música", logo: "https://cdn-profiles.tunein.com/s6779/images/logog.png?t=2", urls:["https://radio-atres-live.ondacero.es/api/livestream-redirect/EFMAAC.aac"]},
+{name:"Rock FM", type:"Música", logo: "https://cdn.aptoide.com/imgs/5/6/d/56dc7cf7fa8339acfd060af31953cb82_icon.png", urls:["https://rockfm-cope-rrcast.flumotion.com/cope/rockfm-low.mp3"]},
+{name:"Radio Marca", type:"Deportes", logo: "https://play-lh.googleusercontent.com/4_7_4vTd1xleWVVPtGrlzh2WEGy-PWKNxAcJKY7To31fV6Pr63jBo8xU6niSwc1xGDu_", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/RADIOMARCA_NACIONAL.mp3"]},
+{name:"COPE", type:"Nacional", logo: "https://play-lh.googleusercontent.com/y0kEAIz4B_O-qCRSZEavDGrao8xovFpsl_gzLBBFY2POQAY3HQPHFX9vSgI-KaZA48U=s512", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3"]},
+{name:"Cadena SER", type:"Nacional", logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2a/55/e6/2a55e69f-5fd9-89a7-102c-4886676e8064/Placeholder.mill/1024x1024bb.jpg", urls:["https://emisoras.cadenaser.com/CADENASER"]},
+{name:"Onda Cero", type:"Nacional", logo: "https://i.scdn.co/image/ab6775700000ee851a865a3769a3e6868928a43f", urls:["https://atres-live.ondacero.es/live/ondacero/bitrate_1.m3u8"]},
+{name:"Los 40 Classic", type:"Música", logo: "https://is1-ssl.mzstatic.com/image/thumb/tL025XkiFsMLmi6P2XbTjA/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_CLASSIC.mp3"]},
+{name:"LOS40 Dance", type:"Música", logo: "https://is1-ssl.mzstatic.com/image/thumb/KegBqioK6Nqjekgb4XZJJQ/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_DANCE.mp3"]},
+{name:"Los 40 Urban", type:"Música", logo: "https://is1-ssl.mzstatic.com/image/thumb/hcMF9sONJWzi4hp0xFdLpA/1024x1024bb.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_URBAN.mp3"]},
+{name:"Máxima FM", type:"Música", logo: "https://i1.sndcdn.com/artworks-c2r8a989wyOCRUu5-NEzkGw-t500x500.jpg", urls:["https://25633.live.streamtheworld.com/LOS40_DANCE.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_DANCE.mp3"]},
+{name:"Melodía FM", type:"Música", logo: "https://graph.facebook.com/tumelodiafm/picture?width=400&height=400", urls:["https://radio-atres-live.ondacero.es/api/livestream-redirect/MELODIA_FMAAC.aac"]},
+{name:"Kiss FM", type:"Música", logo: "https://upload.wikimedia.org/wikipedia/commons/6/66/Logo_KISS_FM_2023.jpg", urls:["https://bbkissfm.kissfmradio.cires21.com/bbkissfm.mp3"]},
+{name:"Hit FM", type:"Música", logo: "https://play-lh.googleusercontent.com/vhLQSO0T_bIKChNhAgMmFbU1RiSOJ0daPxwnxhgh1fJz2acsrmD0u5mAlwcQpFK8tvM", urls:["https://bbhitfm.kissfmradio.cires21.com/bbhitfm.mp3"]},
+{name:"esRadio", type:"Música", logo: "https://graph.facebook.com/esradio/picture?width=400&height=400", urls:["https://libertaddigital-radio-live1.flumotion.com/libertaddigital/ld-live1-high.aac"]},
+{name:"MegaStar FM", type:"Música", short:["MEGA"], bg:"bg-cyan", domain:"megastarfm.es", logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f3/60/80/f3608064-b265-87fd-ebc2-789fff7b2b10/Production-0-1x_U007epad-0-1-0-85-220-0.png/1024x1024bb.png", urls:["https://megastar-cope.flumotion.com/playlist.m3u8"]},
+{name:"SER Deportes", type:"Deportes", short:["SER","DEP"], bg:"bg-gold", domain:"cadenaser.com", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTN97x2XhK7FSkAXds9pHNB6uurSJaL0U-a_-bzBOilAUrYHQuwumGaBX30&s=10", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT1.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER_ALT2.mp3", "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER.mp3"]},
+{name:"COPE Deportes", type:"Deportes", short:["COPE","DEP"], bg:"bg-blue", domain:"cope.es", logo: "https://graph.facebook.com/COPE/picture?width=1024&height=1024", urls:["https://flucast09-h-cloud.flumotion.com/cope/net1.mp3", "https://flucast06-o-cloud.flumotion.com/cope/net4.mp3", "https://flucast09-h-cloud.flumotion.com/cope/net1.aac"]},
+{name:"Valencia CF Radio", type:"Deportes", logo: "https://graph.facebook.com/ValenciaCF/picture?width=200&height=200", urls:["https://radio-valencia-direct.flumotion.com/rvfc/shoutcast.mp3"]},
+{name:"Radio Nacional", type:"Nacional", logo: "https://graph.facebook.com/radionacionalrne/picture?width=200&height=200", urls:["https://rtvelivestream.rtve.es/rtvesec/rne/rne_r1_main.m3u8"]},
+{name:"MDTRadio", type:"Música", logo: "https://graph.facebook.com/mdtradio/picture?width=200&height=200", urls:["https://mdtradio.emitironline.com/mdtwebMaster"]},
+{name:"MDT Radio Pop Stars", type:"Música", logo: "https://mdtradio.com/wp-content/uploads/2024/11/Logo-MDT-Radio-Pop-Stars-Fm2.jpg", urls:["https://mdtradio.emitironline.com/PopStarsFm"]},
+{name:"MDT Radio 80s", type:"Música", logo: "https://mdtradio.com/wp-content/uploads/2024/08/Logo-MDT-Radio-80s-300x300.jpg", urls:["https://mdtradio.emitironline.com/MDTradio80"]},
+{name:"MDT Radio 90s", type:"Música", logo: "https://mdtradio.com/wp-content/uploads/2024/08/Logo-MDT-Radio-90s-300x300.jpg", urls:["https://mdtradio.emitironline.com/MDTradio90"]},
+{name:"MDT Radio 2000", type:"Música", logo: "https://mdtradio.com/wp-content/uploads/2024/08/Logo-MDT-Radio-2000-300x300.jpg", urls:["https://mdtradio.emitironline.com/MDTradio2000"]},
+{name:"Loca FM", type:"Música", short:["LOCA"], bg:"bg-pink", domain:"locafm.com", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s3.we4stream.com:2020/stream/locafm"]},
+{name:"Loca FM Urban", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s1.we4stream.com:2020/stream/locaurban", "https://s2.we4stream.com/listen/loca_dance/live"]},
+{name:"Loca FM Remember", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_remember/live"]},
+{name:"Loca FM Hard", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_hard/live"]},
+{name:"Loca FM House", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_house/live"]},
+{name:"Loca FM Chill Out", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_chill_out/live"]},
+{name:"Loca FM Tech House", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_tech_house/live"]},
+{name:"Loca FM Trance", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_trance/live"]},
+{name:"Loca FM Techno", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_techo/live"]},
+{name:"Loca FM Big Room", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_big_room/live"]},
+{name:"Loca FM Deep House", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_deep_house/live"]},
+{name:"Loca FM Sessions", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_sessions/live"]},
+{name:"Loca FM Ambient", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_ambient/live"]},
+{name:"Loca FM 80's", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_80s/live"]},
+{name:"Loca FM 90's", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_90s_/live"]},
+{name:"Loca FM Melodic House", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_melodic_house/live"]},
+{name:"Loca FM Melodic Techno", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_melodic_techno/live"]},
+{name:"Loca FM Hard Techno", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_hard_techno/live"]},
+{name:"Loca FM Industrial", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_industrial/live"]},
+{name:"Loca FM Drum&Bass", type:"Música", logo: "https://graph.facebook.com/LocaFmOficial/picture?width=200&height=200", urls:["https://s2.we4stream.com/listen/loca_drum__bass/live"]},
+{name:"DigitalHits FM", type:"Música", logo: "https://graph.facebook.com/digitalhits/picture?width=200&height=200", urls:["https://dhits.frilab.com:8443/dhits"]},
+{name:"MariskalRock Radio", type:"Música", logo: "https://graph.facebook.com/mariskalrock/picture?width=200&height=200", urls:["https://media.profesionalhosting.com:8047/stream"]},
+{name:"La Urban Radio", type:"Música", logo: "https://graph.facebook.com/urbanrevolution.es/picture?width=200&height=200", urls:["https://radio.urbanrevolution.es:8443/hispano"]},
+{name:"FLOW Radio", type:"Música", logo: "https://graph.facebook.com/flowradio.es/picture?width=200&height=200", urls:["https://flow.urbanrevolution.es:8445/flow"]},
+{name:"House Radio", type:"Música", logo: "https://graph.facebook.com/houseradiofm/picture?width=200&height=200", urls:["https://house.urbanrevolution.es:8446/houseaac"]},
+{name:"À Punt Ràdio", type:"Local", logo: "https://graph.facebook.com/APuntRadio/picture?width=200&height=200", urls:["https://fastly.live.brightcove.com/1854461588069069227/eu-central-1/6057955885001/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoiZWFxNWh4LmVncmVzcy53YzQ3bTEiLCJhY2NvdW50X2lkIjoiNjA1Nzk1NTg4NTAwMSIsImVobiI6ImZhc3RseS5saXZlLmJyaWdodGNvdmUuY29tIiwiaXNzIjoiYmxpdmUtcGxheWJhY2stc291cmNlLWFwaSIsInN1YiI6InBhdGhtYXB0b2tlbiIsImF1ZCI6WyI2MDU3OTU1ODg1MDAxIl0sImp0aSI6IjE4NTQ0NjE1ODgwNjkwNjkyMjcifQ.RKqA-z0MRntFVph2G3tE9YzBp7vfdMXcynOKpyqvZTg/playlist-hls-dvr.m3u8"]},
+{name:"Radio Marca Valencia", type:"Local", logo: "https://pbs.twimg.com/profile_images/1762418471361482752/einJVrWq_200x200.jpg", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/RADIOMARCA_VALENCIA.mp3"]},
+{name:"SER Gandia", type:"Local", logo: "https://graph.facebook.com/RadioGandia/picture?width=200&height=200", urls:["https://playerservices.streamtheworld.com/api/livestream-redirect/SER_ASO_GANDIA.mp3"]},
+{name:"COPE Onda Naranja", type:"Local", logo: "https://graph.facebook.com/ondanaranjacope/picture?width=200&height=200", urls:["https://str1.mediatelekom.net:8100/stream"]},
+{name:"Onda Cero Gandia", type:"Local", logo: "https://graph.facebook.com/ondacerogandia/picture?width=200&height=200", urls:["https://one.cloudstreaming.eu/proxy/ondacero/stream"]},
+{name:"Europa FM Gandia", type:"Local", logo: "https://graph.facebook.com/tueuropafm/picture?width=200&height=200", urls:["https://one.cloudstreaming.eu/proxy/europa/stream"]},
+{name:"Remember The Music FM", type:"Música", logo: "https://pbs.twimg.com/profile_images/1034848375705878528/qt4gn64O_200x200.jpg", urls:["https://eu1.lhdserver.es:9041/stream"]},
+{name:"Remember Radio", type:"Música", logo: "https://graph.facebook.com/rememberradiocs/picture?width=200&height=200", urls:["https://sm1.streamingmovil.com:2199/proxy/webrr?mp=/WEB"]},
+{name:"Comboi", type:"Local", logo: "https://media.emisorasmusicales.net/wp-content/uploads/2024/04/23134127/LOGO-DEF.-COMBOI-1000x1000px-RGB-200x200.png", urls:["https://stream.emisorasmusicales.net/listen/comboi/comboi.mp3"]},
+{id:"sdf80s", name:"80s Super Dancefloor", type:"Música", short:["80s","SDF"], bg:"bg-purple", domain:"sdf80s.es", logo: "https://static2.mytuner.mobi/media/tvos_radios/cpfthdkc2aag.png", urls:["https://stream.zeno.fm/e59826bc-00f5-41fd-95e5-532f0b3a7be2", "https://s41.myradiostream.com:33604/;stream.mp3"]}
+    ];
 
     /* Temas disponibles (iPod Classic por defecto) */
     const themes = ["ipod", "m3-lavender", "m3-dark", "vlc"];
@@ -620,7 +737,14 @@
     applyTheme(currentThemeIndex);
 
     /* Estado de emisoras y reproducción */
-    let stations = JSON.parse(localStorage.getItem("espencatStations")) || defaultStations;
+    const DEFAULT_TYPE_MAP = Object.fromEntries(defaultStations.map(st => [st.name, st.type]));
+    let savedStations = JSON.parse(localStorage.getItem("espencatStations"));
+    let stations = (savedStations || defaultStations).map(st => ({
+        ...st,
+        type: VALID_TYPES.includes(st.type) ? st.type : (DEFAULT_TYPE_MAP[st.name] || "Música")
+    }));
+
+    let selectedType = "Todas";
     let currentStationIndex = -1;
     let currentUrlIndex = 0;
     let isPlaying = false;
@@ -630,16 +754,71 @@
     const currentLogoEl = document.getElementById("currentLogo");
     const currentTitleEl = document.getElementById("currentTitle");
     const playPauseBtn = document.getElementById("playPauseBtn");
+    const playPauseImg = document.getElementById("playPauseImg");
+    const prevStationBtn = document.getElementById("prevStationBtn");
+    const nextStationBtn = document.getElementById("nextStationBtn");
     const volumeSlider = document.getElementById("volumeSlider");
     const volIcon = document.getElementById("volIcon");
+    const filterBar = document.getElementById("filterBar");
     const stationGrid = document.getElementById("stationGrid");
     const mainView = document.getElementById("mainView");
     const addView = document.getElementById("addView");
     const toggleViewBtn = document.getElementById("toggleViewBtn");
 
+    function updatePlayPauseIcon(playing) {
+        if (playing) {
+            playPauseImg.src = PAUSE_ICON_URL;
+            playPauseImg.alt = "Pausar";
+        } else {
+            playPauseImg.src = PLAY_ICON_URL;
+            playPauseImg.alt = "Reproducir";
+        }
+    }
+
+    function getFilteredStationIndices() {
+        const result = [];
+        stations.forEach((st, idx) => {
+            if (selectedType === "Todas" || st.type === selectedType) {
+                result.push(idx);
+            }
+        });
+        return result;
+    }
+
+    function renderFilters() {
+        filterBar.innerHTML = "";
+        STATION_TYPES.forEach((type) => {
+            const count = type === "Todas"
+                ? stations.length
+                : stations.filter(st => st.type === type).length;
+
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "filter-chip" + (selectedType === type ? " active" : "");
+            chip.textContent = `${type} (${count})`;
+            chip.addEventListener("click", () => {
+                selectedType = type;
+                renderFilters();
+                renderGrid();
+            });
+            filterBar.appendChild(chip);
+        });
+    }
+
     function renderGrid() {
         stationGrid.innerHTML = "";
-        stations.forEach((station, idx) => {
+        const visibleIndices = getFilteredStationIndices();
+
+        if (visibleIndices.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "empty-state";
+            empty.textContent = `No hay emisoras guardadas en "${selectedType}".`;
+            stationGrid.appendChild(empty);
+            return;
+        }
+
+        visibleIndices.forEach((idx) => {
+            const station = stations[idx];
             const card = document.createElement("div");
             card.className = "station-card" + (idx === currentStationIndex ? " active" : "");
 
@@ -655,6 +834,14 @@
 
             card.appendChild(img);
             card.appendChild(title);
+
+            if (selectedType === "Todas") {
+                const badge = document.createElement("span");
+                badge.className = "station-badge";
+                badge.textContent = station.type;
+                card.appendChild(badge);
+            }
+
             card.addEventListener("click", () => startStation(idx, 0));
             stationGrid.appendChild(card);
         });
@@ -676,6 +863,30 @@
         renderGrid();
     }
 
+    function playNextStation() {
+        const list = getFilteredStationIndices();
+        if (list.length === 0) return;
+        const pos = list.indexOf(currentStationIndex);
+        if (pos === -1) {
+            startStation(list[0], 0);
+        } else {
+            const nextPos = (pos + 1) % list.length;
+            startStation(list[nextPos], 0);
+        }
+    }
+
+    function playPrevStation() {
+        const list = getFilteredStationIndices();
+        if (list.length === 0) return;
+        const pos = list.indexOf(currentStationIndex);
+        if (pos === -1) {
+            startStation(list[list.length - 1], 0);
+        } else {
+            const prevPos = (pos - 1 + list.length) % list.length;
+            startStation(list[prevPos], 0);
+        }
+    }
+
     function handleStreamError() {
         if (currentStationIndex === -1) return;
         const station = stations[currentStationIndex];
@@ -683,20 +894,20 @@
             startStation(currentStationIndex, currentUrlIndex + 1);
         } else {
             isPlaying = false;
-            playPauseBtn.textContent = "▶";
+            updatePlayPauseIcon(false);
             playerDeck.classList.remove("playing");
         }
     }
 
     audio.addEventListener("playing", () => {
         isPlaying = true;
-        playPauseBtn.textContent = "⏸";
+        updatePlayPauseIcon(true);
         playerDeck.classList.add("playing");
     });
 
     audio.addEventListener("pause", () => {
         isPlaying = false;
-        playPauseBtn.textContent = "▶";
+        updatePlayPauseIcon(false);
         playerDeck.classList.remove("playing");
     });
 
@@ -704,7 +915,8 @@
 
     playPauseBtn.addEventListener("click", () => {
         if (currentStationIndex === -1) {
-            if (stations.length > 0) startStation(0, 0);
+            const list = getFilteredStationIndices();
+            if (list.length > 0) startStation(list[0], 0);
             return;
         }
         if (isPlaying) {
@@ -713,6 +925,9 @@
             audio.play().catch(() => handleStreamError());
         }
     });
+
+    prevStationBtn.addEventListener("click", playPrevStation);
+    nextStationBtn.addEventListener("click", playNextStation);
 
     /* Control de volumen */
     audio.volume = parseFloat(volumeSlider.value);
@@ -755,6 +970,7 @@
 
     document.getElementById("saveStationBtn").addEventListener("click", () => {
         const name = document.getElementById("newName").value.trim();
+        const type = document.getElementById("newType").value;
         const logo = document.getElementById("newLogo").value.trim() || DEFAULT_LOGO;
         const url1 = document.getElementById("newUrl1").value.trim();
         const url2 = document.getElementById("newUrl2").value.trim();
@@ -767,18 +983,21 @@
         const urls = [url1];
         if (url2) urls.push(url2);
 
-        stations.push({ name, logo, urls });
+        stations.push({ name, type, logo, urls });
         localStorage.setItem("espencatStations", JSON.stringify(stations));
 
         document.getElementById("newName").value = "";
+        document.getElementById("newType").value = "Música";
         document.getElementById("newLogo").value = "";
         document.getElementById("newUrl1").value = "";
         document.getElementById("newUrl2").value = "";
 
+        renderFilters();
         renderGrid();
         showMainView();
     });
 
+    renderFilters();
     renderGrid();
 </script>
 </body>
